@@ -6,6 +6,7 @@ import { Container,Row,Col } from "react-bootstrap";
 const SocailMedia = () => {
   const [facebookData, setFacebookData] = useState({});
   const [instagramData, setInstagramData] = useState({});
+  const [otherData, setOtherData] = useState({});
 
   useEffect(() => {
     const fetchFacebookData = async () => {
@@ -16,6 +17,18 @@ const SocailMedia = () => {
           },
         });
         setFacebookData(response.data);
+      } catch (error) {
+        console.error('Error fetching Facebook API data:', error);
+      }
+    };
+    const fetchOtherData = async () => {
+      try {
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/platformStats/Other', {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
+        });
+        setOtherData(response.data);
       } catch (error) {
         console.error('Error fetching Facebook API data:', error);
       }
@@ -36,6 +49,7 @@ const SocailMedia = () => {
 
     fetchFacebookData();
     fetchInstagramData();
+    fetchOtherData()
   }, []);
 
   useEffect(() => {
@@ -290,6 +304,132 @@ const SocailMedia = () => {
     }
   }, [instagramData]);
 
+  useEffect(() => {
+    if (otherData.TotalCount && otherData.SaleCount) {
+      const otherTotalCountCtx = document.getElementById('otherTotalCountChart').getContext('2d');
+      const otherSaleCountCtx = document.getElementById('otherSaleCountChart').getContext('2d');
+
+      const otherTotalCountData = {
+        labels: otherData.TotalCount.xValues,
+        data: otherData.TotalCount.yValues,
+        backgroundColor: otherData.TotalCount.barColors,
+      };
+      const otherSaleCountData = {
+        labels: otherData.SaleCount.xValues,
+        data: otherData.SaleCount.yValues,
+        backgroundColor: otherData.SaleCount.barColors,
+      };
+
+      new Chart(otherTotalCountCtx, {
+        type: 'pie',
+        data: {
+          labels: otherTotalCountData.labels,
+          datasets: [
+            {
+              data: otherTotalCountData.data,
+              backgroundColor: otherTotalCountData.backgroundColor,
+            },
+          ],
+        },
+        options: {
+          maintainAspectRatio: false,
+       
+        plugins: {
+             
+          legend: {
+            position: 'top',
+            labels:{
+
+              font: {
+                size: 14,
+                family:"Cairo"
+            }
+            },
+          },
+          title: {
+            display: true,
+            text: 'عدد الزبائن المحتملين',
+            font: {
+              size: 20,
+              family:"Cairo"
+          },
+          },
+          tooltip: {
+            titleFont: {
+              size: 16,
+              family:"Cairo"
+
+            },
+            bodyFont: {
+              size: 14,
+              family:"Cairo"
+
+            },
+            footerFont: {
+              size: 14,
+              family:"Cairo"
+            }
+          }
+        },
+        },
+      });
+
+      new Chart(otherSaleCountCtx, {
+        type: 'pie',
+        data: {
+          labels: otherSaleCountData.labels,
+          datasets: [
+            {
+              data: otherSaleCountData.data,
+              backgroundColor: otherSaleCountData.backgroundColor,
+            },
+          ],
+        },
+        options: {
+          maintainAspectRatio: false,
+       
+        plugins: {
+             
+          legend: {
+            position: 'top',
+            labels:{
+
+              font: {
+                size: 14,
+                family:"Cairo"
+            }
+            },
+          },
+          title: {
+            display: true,
+            text: 'عدد الزبائن الفعليين',
+            font: {
+              size: 20,
+              family:"Cairo"
+          },
+          },
+          tooltip: {
+            titleFont: {
+              size: 16,
+              family:"Cairo"
+
+            },
+            bodyFont: {
+              size: 14,
+              family:"Cairo"
+
+            },
+            footerFont: {
+              size: 14,
+              family:"Cairo"
+            }
+          }
+        },
+        },
+      });
+    }
+  }, [otherData]);
+
   return (
     <Container className=" mt-4">
 
@@ -344,6 +484,35 @@ const SocailMedia = () => {
 
  <div className='card' style={{margin:"10px",height:"350px"}}>
  <canvas id="instagramSaleCountChart"></canvas>
+
+
+</div>
+
+</div>
+
+     
+     </Row>
+    
+     <Row className='  p-4   border rounded-2' style={{margin:"10px"}}>
+     <h4 className=' text-center fw-bold'> احصائيات حملات  منصات أخرى</h4>
+
+     <div className=" col-sm-12 col-md-6 col-lg-6">
+     <div className='card' style={{margin:"10px",height:"350px"}}>
+     <canvas  id="otherTotalCountChart"></canvas>
+
+
+</div>
+
+      </div>
+    
+    
+     
+
+
+ <div className=" col-sm-12 col-md-6 col-lg-6">
+
+ <div className='card' style={{margin:"10px",height:"350px"}}>
+ <canvas id="otherSaleCountChart"></canvas>
 
 
 </div>

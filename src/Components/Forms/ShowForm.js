@@ -126,6 +126,9 @@ const ShowForm = () => {
                   <option key={`platform_Instagram`} value={"Instagram"}>
                     Instagram
                   </option>
+                  <option key={`platform_Other`} value={"Other"}>
+                    Other
+                  </option>
                 </select>
             </div>
             <img
