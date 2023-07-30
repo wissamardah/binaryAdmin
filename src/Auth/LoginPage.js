@@ -6,7 +6,10 @@ import lock from "../image/lock.png";
 import avatar from "../image/password.png";
 import toastr from "toastr";
 import { useNavigate } from "react-router-dom";
+
+
 const LoginPage = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Add loading state
@@ -16,7 +19,7 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "https://api.binary.yachts/api/adminlogin",
+        process.env.REACT_APP_API_URL+"/api/adminlogin",
         {
           email,
           password,
@@ -37,6 +40,8 @@ const LoginPage = () => {
     }
     setIsLoading(false);
   };
+
+
 
   return (
     <Container className="mt-5 ">

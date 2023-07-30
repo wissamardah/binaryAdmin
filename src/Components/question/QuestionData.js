@@ -17,7 +17,7 @@ const QuestionData = () => {
     const handleSubmit = async (e) => {
       e.preventDefault();
   
-      const url = "https://api.binary.yachts/api/addQuestion";
+      const url = process.env.REACT_APP_API_URL+"/api/addQuestion";
       const token = sessionStorage.getItem("token");
   
       const headers = {
@@ -33,26 +33,31 @@ const QuestionData = () => {
        
         setquestion("");
         toastr.success("تم اضافة السؤال بنجاح  ");
+        fetchData()
+
       } catch (error) {
         console.error(error);
       }
       setshowForm(false)
     };
   
-    useEffect(() => {
+    const fetchData=async ()=>{
       axios
-        .get("https://api.binary.yachts/api/questions", {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          const result = response.data;
-          setData(result.data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+      .get(process.env.REACT_APP_API_URL+"/api/questions", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        const result = response.data;
+        setData(result.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    }
+    useEffect(() => {
+   fetchData()
     }, []);
   
     const columns = [
@@ -81,7 +86,42 @@ const QuestionData = () => {
           </div>
         ),
       },
-      
+      {
+        id: "delete",
+        header:"",
+        accessorKey: "delete",
+        Cell: ({ row }) => {
+         
+          const handleDelete = async () => {
+            const dataId = row.original.id; // Assuming there's an "id" property in the form data
+            const token = sessionStorage.getItem("token");
+            try{
+    await axios.get(process.env.REACT_APP_API_URL+`/api/deleteQuestion/`+dataId, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          
+    
+            }
+            catch{
+    
+            }
+            fetchData()
+  
+          };
+        
+          return (
+            <div className="text-end fw-bolder">
+    
+    
+    
+             
+             <button type="button" class="btn btn-danger" onClick={handleDelete}>حذف</button>
+    
+            </div>
+          );},
+      }
     ];
   
     

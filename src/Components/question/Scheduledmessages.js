@@ -15,7 +15,7 @@ const Scheduledmessages = () => {
   
     useEffect(() => {
       axios
-        .get("https://api.binary.yachts/api/getscheduledmessagesMobile", {
+        .get(process.env.REACT_APP_API_URL+"/api/getscheduledmessagesMobile", {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
@@ -53,7 +53,7 @@ const Scheduledmessages = () => {
           // ... your existing code for deleting the item ...
   
           const response = await axios.get(
-            `https://api.binary.yachts/api/deletescheduledmessagesMobile/${id}`,
+            process.env.REACT_APP_API_URL+`/api/deletescheduledmessagesMobile/${id}`,
              {
               headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,

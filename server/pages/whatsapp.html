@@ -273,7 +273,7 @@
     
     // Fetch and render the chat messages
     function fetchMessages() {
-      fetch('https://api.binary.yachts/api/getWhatsappMessages/972599513387',{
+      fetch(process.env.REACT_APP_API_URL+'/api/getWhatsappMessages/972599513387',{
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -299,7 +299,7 @@
       const message = messageInput.value.trim();
       if (message !== '') {
       
-        fetch('https://api.binary.yachts/api/sendWhatsapp', {
+        fetch(process.env.REACT_APP_API_URL+'/api/sendWhatsapp', {
           method: 'POST',
           headers: {
           'Content-Type': 'application/json',

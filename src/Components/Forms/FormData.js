@@ -48,7 +48,7 @@ const FormData = ({ id, _formDetails }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://api.binary.yachts/api/getFormData/${id}`, {
+        const response = await axios.get(process.env.REACT_APP_API_URL+`/api/getFormData/${id}`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },
@@ -91,14 +91,14 @@ const FormData = ({ id, _formDetails }) => {
                 const body = { dataId };
                 const token = sessionStorage.getItem("token");
                 if (isChecked) {
-                  await axios.post(`https://api.binary.yachts/api/activateSale`, body, {
+                  await axios.post(process.env.REACT_APP_API_URL+`/api/activateSale`, body, {
                     headers: {
                       Authorization: `Bearer ${token}`,
                     },
                   });
                   row.original.isSale = true; 
                 } else {
-                  await axios.post(`https://api.binary.yachts/api/deactivateSale`, body, {
+                  await axios.post(process.env.REACT_APP_API_URL+`/api/deactivateSale`, body, {
                     headers: {
                       Authorization: `Bearer ${token}`,
                     },
@@ -119,6 +119,44 @@ const FormData = ({ id, _formDetails }) => {
                   onChange={handleSaleChange}
                 />
                
+              </div>
+            );},
+        }) 
+
+        c.push(   {
+          id: header["id"],
+          header:"",
+          accessorKey: header["id"],
+          Cell: ({ row }) => {
+           
+            const handleDelete = async () => {
+              const dataId = row.original.id; // Assuming there's an "id" property in the form data
+              const body = { dataId };
+              const token = sessionStorage.getItem("token");
+              try{
+      await axios.get(process.env.REACT_APP_API_URL+`/api/deleteFormData/`+dataId, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              fetchData();
+  
+  
+              }
+              catch{
+  
+              }
+          
+            };
+          
+            return (
+              <div className="text-end fw-bolder">
+  
+  
+  
+               
+               <button type="button" class="btn btn-danger" onClick={handleDelete}>حذف</button>
+  
               </div>
             );},
         }) 

@@ -36,8 +36,8 @@ console.error("sms Function")
     
     const postData = {
 	
-      "api_key" : "76e3931b5fbcf6249c3bc46aeb102c5a" ,
-      "sender" :  "BlitzAds",
+      "api_key" : process.env.tweetSmsApi ,
+      "sender" :  process.env.tweetSmsSender,
       "message" : message ,
       "to":numbers.join(",")
     }
@@ -104,13 +104,13 @@ function sendTemplate(message,numbers){
   };
   
   const options = {
-    url: 'https://graph.facebook.com/v17.0/109881852099407/messages',
+    url: 'https://graph.facebook.com/v17.0/'+process.env.facebookMobileId+'/messages',
     method: 'POST',
     json: true,
     body: postData,
     headers: {
       'Content-Type': 'application/json',
-      "Authorization": "Bearer EAAyfEj71dU4BAM7C5Ev9AZCWzYZBDE92XdN39ZCFOjMHpDgPuMa19tbIzsZCQLZBo03DfZCsOqGQw6qaqdN6DN5AoRLm5AjO5ZCJlNtVTPzjkkIi6sipJDErjmVV44fyoZB93ZA5TYmgZBhNg7jP1BBZAhWYmOEKUUmsKcxKZCUz2or4mRt2Ga7gAeoUPbMlJt7ITKH62upZAKhWZBCJw9u2wCz5RK2fkm6XzMZAm8ZD"
+      "Authorization": "Bearer "+process.env.facebookToken
     }
   };
   
@@ -238,7 +238,7 @@ router.post("/adminlogin", (req, res, next) => {
 });
 router.get("/getCampains", (req, res, next) => {
   db.query(
-    "select * from campains order by id desc",
+    "select * from campains where visible=1 order by id desc",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -258,6 +258,28 @@ router.get("/getCampains", (req, res, next) => {
 router.get("/getCustomers", (req, res, next) => {
   db.query(
     "select * from customers order by id desc",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          status: "error",
+          msg: "Internal Server Error",
+        });
+      }
+      res.status(200).send({
+        status: "success",
+        data: result,
+      });
+    }
+  );
+});
+
+router.post("/customerNote", (req, res, next) => {
+  const {id,note}=req.body
+
+
+  db.query(
+    "update customers set notes=? where id=?",[note,id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -474,12 +496,7 @@ router.post("/createForm",userMiddleware.isAdmin, (req, res, next) => {
     type:"date",
     required:true
   })
-  data.unshift( {
 
-    id:"email",
-    label:"البريد الالكتروني",
-    type:"email"
-  })
   
   data.unshift( {
 
@@ -590,13 +607,13 @@ router.post("/sendWhatsapp",userMiddleware.isAdmin, (req, res, next) => {
   };
   
   const options = {
-    url: 'https://graph.facebook.com/v16.0/109881852099407/messages',
+    url: 'https://graph.facebook.com/v16.0/'+process.env.facebookMobileId+'/messages',
     method: 'POST',
     json: true,
     body: postData,
     headers: {
       'Content-Type': 'application/json',
-      "Authorization": "Bearer EAAyfEj71dU4BAM7C5Ev9AZCWzYZBDE92XdN39ZCFOjMHpDgPuMa19tbIzsZCQLZBo03DfZCsOqGQw6qaqdN6DN5AoRLm5AjO5ZCJlNtVTPzjkkIi6sipJDErjmVV44fyoZB93ZA5TYmgZBhNg7jP1BBZAhWYmOEKUUmsKcxKZCUz2or4mRt2Ga7gAeoUPbMlJt7ITKH62upZAKhWZBCJw9u2wCz5RK2fkm6XzMZAm8ZD"
+      "Authorization": "Bearer "+process.env.facebookToken
     }
   };
   
@@ -635,13 +652,13 @@ router.post("/sendWhatsapptemplate",userMiddleware.isAdmin, (req, res, next) => 
   };
   
   const options = {
-    url: 'https://graph.facebook.com/v17.0/109881852099407/messages',
+    url: 'https://graph.facebook.com/v17.0/'+process.env.facebookMobileId+'/messages',
     method: 'POST',
     json: true,
     body: postData,
     headers: {
       'Content-Type': 'application/json',
-      "Authorization": "Bearer EAAyfEj71dU4BAM7C5Ev9AZCWzYZBDE92XdN39ZCFOjMHpDgPuMa19tbIzsZCQLZBo03DfZCsOqGQw6qaqdN6DN5AoRLm5AjO5ZCJlNtVTPzjkkIi6sipJDErjmVV44fyoZB93ZA5TYmgZBhNg7jP1BBZAhWYmOEKUUmsKcxKZCUz2or4mRt2Ga7gAeoUPbMlJt7ITKH62upZAKhWZBCJw9u2wCz5RK2fkm6XzMZAm8ZD"
+      "Authorization": "Bearer "+process.env.facebookToken
     }
   };
   
@@ -794,7 +811,7 @@ router.get("/questionResponses/:qid", (req, res, next) => {
 });
 router.get("/questions", (req, res, next) => {
   db.query(
-    "select * from questions order by id desc",
+    "select * from questions where visible=1 order by id desc",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -1003,6 +1020,31 @@ router.get("/getFormData/:formId",userMiddleware.isAdmin, async(req, res, next) 
           res.send(result)
     
         })  
+ 
+    })  
+
+
+
+})
+router.get("/deleteFormData/:dataId",userMiddleware.isAdmin, async(req, res, next) => {
+
+  db.query(
+    'delete from formsdata where id=?',[req.params.dataId],
+    (err, campains) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          status: "error",
+          msg: "Internal Server Error",
+        });
+      }
+  
+      else{
+        return res.status(200).send({
+          status: "success",
+          msg: "تم الحذف بنجاح",
+        });
+      }
  
     })  
 
@@ -1466,7 +1508,31 @@ router.get("/getMapData", (req, res, next) => {
       data: result,
     });
   });
+
 });
+
+router.get("/deleteCampain/:campaignId",userMiddleware.isAdmin, (req, res, next) => {
+  const { campaignId } = req.params;
+
+  db.query(
+    "update campains set visible=0 where id=?",
+    [campaignId],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          status: "error",
+          msg: "Internal Server Error",
+        });
+      }
+      res.status(200).send({
+        status: "success",
+        msg: "تم حذف الحملة بنجاح",
+      });
+    }
+  );
+});
+
 router.post("/addCampain",userMiddleware.isAdmin, (req, res, next) => {
   const { name } = req.body;
 
@@ -1505,6 +1571,27 @@ router.post("/addQuestion",userMiddleware.isAdmin, (req, res, next) => {
       res.status(200).send({
         status: "success",
         msg: "تم اضافة السؤال بنجاح",
+      });
+    }
+  );
+});
+router.get("/deleteQuestion/:questionId",userMiddleware.isAdmin, (req, res, next) => {
+  const { questionId } = req.params;
+
+  db.query(
+    "update questions set visible=0 where id=?",
+    [questionId],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          status: "error",
+          msg: "Internal Server Error",
+        });
+      }
+      res.status(200).send({
+        status: "success",
+        msg: "تم حذف السؤال بنجاح",
       });
     }
   );
@@ -1636,13 +1723,13 @@ router.post("/contactUs", (req, res, next) => {
   };
   
   const options = {
-    url: 'https://graph.facebook.com/v16.0/109881852099407/messages',
+    url: 'https://graph.facebook.com/v16.0/'+process.env.facebookMobileId+'/messages',
     method: 'POST',
     json: true,
     body: postData,
     headers: {
       'Content-Type': 'application/json',
-      "Authorization": "Bearer EAAyfEj71dU4BAM7C5Ev9AZCWzYZBDE92XdN39ZCFOjMHpDgPuMa19tbIzsZCQLZBo03DfZCsOqGQw6qaqdN6DN5AoRLm5AjO5ZCJlNtVTPzjkkIi6sipJDErjmVV44fyoZB93ZA5TYmgZBhNg7jP1BBZAhWYmOEKUUmsKcxKZCUz2or4mRt2Ga7gAeoUPbMlJt7ITKH62upZAKhWZBCJw9u2wCz5RK2fkm6XzMZAm8ZD"
+      "Authorization": "Bearer "+process.env.facebookToken
     }
   };
   
@@ -1707,7 +1794,7 @@ router.post("/sendform", function (req, res) {
     const {name,mobile,address,gender,email,dob}=req.body.data
     db.query(
       "insert into customers (name,mobile,address,gender,email,dob) values (?,?,?,?,?,?)",
-      [name,mobile,address,gender,email,dob],
+      [name,mobile,address,gender,email||"",dob],
       (err, result) => {
         if (err) {
           console.log(err);

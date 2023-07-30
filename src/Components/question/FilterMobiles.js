@@ -36,7 +36,7 @@ function JsonComponent({ data ,setFilteredMobiles}) {
   const handleSubmit = () => {
     const visibleData = selectedData.filter((item) => visibility[item.labelName]);
 
-    fetch('https://api.binary.yachts/api/getFilteredMobiles', {
+    fetch(process.env.REACT_APP_API_URL+'/api/getFilteredMobiles', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

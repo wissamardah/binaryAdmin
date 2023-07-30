@@ -13,8 +13,8 @@ function AddWhatSay({setshowForm}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const uploadUrl = "https://api.binary.yachts/api/upload";
-    const apiUrl = "https://api.binary.yachts/api/editSection";
+    const uploadUrl = process.env.REACT_APP_API_URL+"/api/upload";
+    const apiUrl = process.env.REACT_APP_API_URL+"/api/editSection";
     const token = sessionStorage.getItem("token");
 
     const headers = {

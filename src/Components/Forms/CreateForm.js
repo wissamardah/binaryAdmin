@@ -70,7 +70,7 @@ const CreateForm = () => {
 
 
   axios
-        .post("https://api.binary.yachts/api/createForm", formStructure, {
+        .post(process.env.REACT_APP_API_URL+"/api/createForm", formStructure, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,

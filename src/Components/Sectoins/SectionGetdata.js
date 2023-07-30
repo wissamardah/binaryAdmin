@@ -35,7 +35,7 @@ const SectionGetData = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://api.binary.yachts/api/getSectionData?sectionId=${sectionId}`
+          process.env.REACT_APP_API_URL+`/api/getSectionData?sectionId=${sectionId}`
         );
         const result = response.data;
 
@@ -63,7 +63,7 @@ const SectionGetData = () => {
     };
    try {
     const response = await axios.post(
-      "https://api.binary.yachts/api/editSection",
+      process.env.REACT_APP_API_URL+"/api/editSection",
       {
         id: editedData.id,
         sectionId: editedData.sectionId,
@@ -93,7 +93,7 @@ const handleSubmitsectionHome = async (e) => {
   };
  try {
   const response = await axios.post(
-    "https://api.binary.yachts/api/editSection",
+    process.env.REACT_APP_API_URL+"/api/editSection",
     {
       id: editedData.id,
       sectionId: editedData.sectionId,
@@ -119,7 +119,7 @@ const handleImageUpload = async (file, key) => {
 
   try {
     const response = await axios.post(
-      "https://api.binary.yachts/api/upload",
+      process.env.REACT_APP_API_URL+"/api/upload",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
@@ -172,7 +172,7 @@ const handleImageUpload = async (file, key) => {
         // ... your existing code for deleting the item ...
 
         const response = await axios.post(
-          `https://api.binary.yachts/api/deleteSectionData`,
+          process.env.REACT_APP_API_URL+`/api/deleteSectionData`,
           {
             sectionId: sectionId,
             dataId: dataId,

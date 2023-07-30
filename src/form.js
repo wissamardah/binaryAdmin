@@ -14,7 +14,7 @@ function Form() {
   const [mobile,setMobile]=useState("")
   useEffect(() => {
     const fetchData = async () => {
-        const response = await axios.get('https://api.binary.yachts/api/getForm/'+queryParams.get("formId"));
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/getForm/'+queryParams.get("formId"));
         setJsonData(response.data);
       // Creating initial state with all fields set to null
       const initialState = response.data.data[0].data.reduce((acc, field) => {
@@ -53,7 +53,7 @@ const handleFileChange = async (event) => {
 
   try {
       // Upload the file and get the URL
-      const response = await axios.post('https://api.binary.yachts/api/upload', formData, {
+      const response = await axios.post(process.env.REACT_APP_API_URL+'/api/upload', formData, {
           headers: {
               'Content-Type': 'multipart/form-data',
           },
@@ -112,7 +112,7 @@ const handleFileChange = async (event) => {
 
       try {
           // Send the POST request to the specified endpoint
-          const response= await axios.post('https://api.binary.yachts/api/sendform', data);
+          const response= await axios.post(process.env.REACT_APP_API_URL+'/api/sendform', data);
 
       
           // Clear the form

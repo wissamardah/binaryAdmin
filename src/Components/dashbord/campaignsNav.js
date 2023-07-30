@@ -10,7 +10,7 @@ const CampaignsNav = ({setCampaignId}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://api.binary.yachts/api/getCampains');
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/getCampains');
         const result = response.data;
 
         if (result.status === 'success') {

@@ -35,7 +35,7 @@ const SendQuestion = () => {
  
   useEffect(() => {
     axios
-      .get("https://api.binary.yachts/api/questions", {
+      .get(process.env.REACT_APP_API_URL+"/api/questions", {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -50,7 +50,7 @@ const SendQuestion = () => {
 
 
       axios
-      .get("https://api.binary.yachts/api/getAllFormData", {
+      .get(process.env.REACT_APP_API_URL+"/api/getAllFormData", {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -72,7 +72,7 @@ const SendQuestion = () => {
 
      const postData = async () => {
       try {
-        const response = await fetch('https://api.binary.yachts/api/addScheduledMessageMobile', {
+        const response = await fetch(process.env.REACT_APP_API_URL+'/api/addScheduledMessageMobile', {
           method: 'POST', // specify the method
           headers: {
             'Content-Type': 'application/json', // specify the Content-Type header

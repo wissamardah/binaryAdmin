@@ -8,11 +8,11 @@ const ChatComponent = () => {
 
   const [mobile,setMobile]=useState("")
   const fetchMessages = async () => {
-    const response = await fetch('https://api.binary.yachts/api/getWhatsappMessages/'+mobile, {
+    const response = await fetch(process.env.REACT_APP_API_URL+'/api/getWhatsappMessages/'+mobile, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NDA4MjI4MywiZXhwIjoxNjg5MjY2MjgzfQ.FgK8dkjDrQ4dTznvD3T3cayPRU-hbaTX4bKZgxEKO04' // replace with your token
+        'Authorization': `Bearer ${sessionStorage.getItem("token")}` // replace with your token
       },
     });
 
@@ -31,11 +31,11 @@ const ChatComponent = () => {
   const sendMessage = async (event) => {
     event.preventDefault();
     if (newMessage !== '') {
-      await fetch('https://api.binary.yachts/api/sendWhatsapp', {
+      await fetch(process.env.REACT_APP_API_URL+'/api/sendWhatsapp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NDA4MjI4MywiZXhwIjoxNjg5MjY2MjgzfQ.FgK8dkjDrQ4dTznvD3T3cayPRU-hbaTX4bKZgxEKO04' // replace with your token
+          'Authorization': `Bearer ${sessionStorage.getItem("token")}` // replace with your token
         },
         body: JSON.stringify({
           to: mobile,

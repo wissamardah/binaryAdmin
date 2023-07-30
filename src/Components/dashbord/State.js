@@ -10,7 +10,7 @@ const StateChart = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://api.binary.yachts/api/stats",
+          process.env.REACT_APP_API_URL+"/api/stats",
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,

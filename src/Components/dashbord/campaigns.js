@@ -13,7 +13,7 @@ const CampignChart = () => {
   useEffect(() => {
     const fetchCampaignData = async (id) => {
       try {
-        const response = await axios.get('https://api.binary.yachts/api/campaignStats/'+id, {
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/campaignStats/'+id, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },

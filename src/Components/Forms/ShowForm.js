@@ -15,7 +15,7 @@ const ShowForm = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     axios
-      .get("https://api.binary.yachts/api/getCampains", {
+      .get(process.env.REACT_APP_API_URL+"/api/getCampains", {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -32,7 +32,7 @@ const ShowForm = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://api.binary.yachts/api/getForm/${id}`,
+          process.env.REACT_APP_API_URL+`/api/getForm/${id}`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -131,7 +131,7 @@ const ShowForm = () => {
             <img
             onClick={() => {
               
-              navigator.clipboard.writeText(`https://binary.yachts/form?campain=`+campain+"&platform="+platform+"&formId="+id)
+              navigator.clipboard.writeText(process.env.REACT_APP_URL+`/form?campain=`+campain+"&platform="+platform+"&formId="+id)
             
               toastr.success("تم نسخ رابط النموذج");
 

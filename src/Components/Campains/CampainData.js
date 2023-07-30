@@ -18,7 +18,7 @@ const Campains  = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const url = "https://api.binary.yachts/api/addCampain";
+    const url = process.env.REACT_APP_API_URL+"/api/addCampain";
     const token = sessionStorage.getItem('token');
 
     const headers = {
@@ -38,11 +38,13 @@ const Campains  = () => {
       console.error(error);
     }
     setshowForm(false)
+    fetchData()
+
   };
 
-  useEffect(() => {
+  const fetchData=async ()=>{
     axios
-      .get("https://api.binary.yachts/api/getCampains", {
+      .get(process.env.REACT_APP_API_URL+"/api/getCampains", {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -54,6 +56,9 @@ const Campains  = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+  }
+  useEffect(() => {
+fetchData()
   }, []);
 
   const columns = [
@@ -82,10 +87,44 @@ const Campains  = () => {
         </div>
       ),
     },
-    
+    {
+      id: "delete",
+      header:"",
+      accessorKey: "delete",
+      Cell: ({ row }) => {
+       
+        const handleDelete = async () => {
+          const dataId = row.original.id; // Assuming there's an "id" property in the form data
+          const token = sessionStorage.getItem("token");
+          try{
+  await axios.get(process.env.REACT_APP_API_URL+`/api/deleteCampain/`+dataId, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        
+  
+          }
+          catch{
+  
+          }
+          fetchData()
+
+        };
+      
+        return (
+          <div className="text-end fw-bolder">
+  
+  
+  
+           
+           <button type="button" class="btn btn-danger" onClick={handleDelete}>حذف</button>
+  
+          </div>
+        );},
+    }
   ];
 
-  
 
   return (
     <Container className=" mt-5">

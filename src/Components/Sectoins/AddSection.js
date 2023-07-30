@@ -10,7 +10,7 @@ function AddQ_A({setshowForm}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const url = "https://api.binary.yachts/api/editSection";
+    const url = process.env.REACT_APP_API_URL+"/api/editSection";
     const token = sessionStorage.getItem("token");
 
     const headers = {

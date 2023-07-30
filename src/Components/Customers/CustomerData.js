@@ -5,31 +5,60 @@ import MaterialReactTable from "material-react-table";
 import axios from "axios";
 import toastr from "toastr";
 
-const CustomerData  = () => {
+const CustomerData = () => {
   const [data, setData] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState('');
+  const [activeId, setActiveId] = useState(0);
+
   const fetchData = async () => {
-      axios
-      .get("https://api.binary.yachts/api/getCustomers", {
+    try {
+      const response = await axios.get(process.env.REACT_APP_API_URL+"/api/getCustomers", {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
-      })
-      .then((response) => {
-        const result = response.data;
-        setData(result.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
       });
-    
+      setData(response.data.data);
+    } catch (error) {
+      console.error("Error:", error);
     }
-  useEffect(() => {
-  
+  };
 
-    fetchData()
-  
+  useEffect(() => {
+    fetchData();
   }, []);
 
+  const makePostRequest = async (newData) => {
+    try {
+      const response = await axios.post(process.env.REACT_APP_API_URL+"/api/customerNote", { note: newData,id:activeId }, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+
+      toastr.success("Successfully updated notes.");
+      fetchData();
+
+    } catch (error) {
+      console.error("Error:", error);
+      toastr.error("Failed to update notes.");
+    }
+  };
+
+  const handleDoubleClick = (notes,id) => {
+    setIsEditing(true);
+    setEditedText(notes);
+    setActiveId(id)
+  };
+
+  const handleSaveChanges = () => {
+    setIsEditing(false);
+    makePostRequest(editedText);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
   const columns = [
     {
       id: "id",
@@ -62,7 +91,7 @@ const CustomerData  = () => {
       accessorKey: "mobile",
       Cell: ({ row }) => (
         <div className="text-end ">
-                      <Link target="_blank" className="text-decoration-none" to={"https://admin.binary.yachts/whatsapp?mobile="+row.original.mobile}>
+                      <Link target="_blank" className="text-decoration-none" to={process.env.REACT_APP_ADMIN_URL+"/whatsapp?mobile="+row.original.mobile}>
 
           {row.original.mobile}
      </Link>
@@ -133,19 +162,46 @@ const CustomerData  = () => {
             </div>
           );},
       },
+
+      {
+        id: "notes",
+        header: "ملاحظات",
+        accessorKey: "notes",
+        Cell: ({ row }) => (
+          (isEditing && activeId==row.original.id) ? (
+            <div className="text-end">
+              <input
+                type="text"
+                value={editedText}
+                onChange={(e) => setEditedText(e.target.value)}
+              />
+            
+            <div style={{marginTop:"10px"}}>
+                 <button type="button" class="btn btn-success" style={{marginLeft:"5px"}} onClick={handleSaveChanges}>حفظ</button>
+              <button type="button" class="btn btn-danger" style={{marginRight:"5px"}} onClick={handleCancelEdit}>الغاء</button>
+
+              </div>
+           
+            </div>
+          ) : (
+            <div className="text-end" onDoubleClick={() => handleDoubleClick(row.original.notes,row.original.id)}>
+              {row.original.notes||"لا ملاحظات"}
+            </div>
+          )
+        ),
+      },
   ];
 
-  
 
   return (
     <Container className="text-center mt-5">
       <Box py={2} bgcolor="primary.main" color="primary.contrastText" textAlign="center">
-        <Typography variant="h4"  gutterBottom>
+        <Typography variant="h4" gutterBottom>
           قائمة الزبائن
         </Typography>
       </Box>
       <Paper className="table-container ">
-        <div   >
+        <div>
           <MaterialReactTable columns={columns} data={data} enableColumnFilterModes />
         </div>
       </Paper>
@@ -153,4 +209,4 @@ const CustomerData  = () => {
   );
 };
 
-export default CustomerData ;
+export default CustomerData;

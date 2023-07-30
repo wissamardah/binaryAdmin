@@ -10,7 +10,7 @@ const SocailMedia = () => {
   useEffect(() => {
     const fetchFacebookData = async () => {
       try {
-        const response = await axios.get('https://api.binary.yachts/api/platformStats/facebook', {
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/platformStats/facebook', {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },
@@ -23,7 +23,7 @@ const SocailMedia = () => {
 
     const fetchInstagramData = async () => {
       try {
-        const response = await axios.get('https://api.binary.yachts/api/platformStats/Instagram', {
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/platformStats/Instagram', {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },

@@ -10,7 +10,7 @@ const DisplayAllForms = () => {
 
   useEffect(() => {
     axios
-      .get("https://api.binary.yachts/api/getForms", {
+      .get(process.env.REACT_APP_API_URL+"/api/getForms", {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -112,7 +112,7 @@ const DisplayAllForms = () => {
         const endpoint = newActivated ? "activateform" : "deactivateform";
         axios
           .post(
-            `https://api.binary.yachts/api/${endpoint}`,
+            process.env.REACT_APP_API_URL+`/api/${endpoint}`,
             { formid: itemId },
             {
               headers: {

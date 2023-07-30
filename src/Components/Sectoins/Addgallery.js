@@ -17,7 +17,7 @@ function Addblog({ setshowForm }) {
     };
     try {
       const response = await axios.post(
-        "https://api.binary.yachts/api/editSection",
+        process.env.REACT_APP_API_URL+"/api/editSection",
         {
           sectionId: 7,
           data: {
@@ -53,7 +53,7 @@ function Addblog({ setshowForm }) {
 
     try {
       const response = await axios.post(
-        "https://api.binary.yachts/api/upload",
+        process.env.REACT_APP_API_URL+"/api/upload",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

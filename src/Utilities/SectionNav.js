@@ -9,7 +9,7 @@ const SectionNav = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://api.binary.yachts/api/nav');
+        const response = await axios.get(process.env.REACT_APP_API_URL+'/api/nav');
         const result = response.data;
 
         if (result.status === 'success') {

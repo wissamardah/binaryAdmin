@@ -23,7 +23,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const formid = urlParams.get('formid');
 var formJsonData=[]
-const apiUrl="https://api.binary.yachts/api"
+const apiUrl=process.env.REACT_APP_API_URL+"/api"
 
 fetch(apiUrl+'/getForm/'+formid)
   .then(response => response.json())

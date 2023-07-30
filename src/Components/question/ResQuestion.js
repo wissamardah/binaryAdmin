@@ -11,7 +11,7 @@ const ResQuestion = () => {
 
   useEffect(() => {
     axios
-      .get(`https://api.binary.yachts/api/questionResponses/${id}`, {
+      .get(process.env.REACT_APP_API_URL+`/api/questionResponses/${id}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -63,7 +63,7 @@ const formatDateTime = (timestamp) => {
       accessorKey: "phone",
       Cell: ({ row }) => (
         <div className="text-end ">
-     <Link target="-blank" className="text-decoration-none" to={"https://admin.binary.yachts/whatsapp?mobile="+row.original.phone}>
+     <Link target="-blank" className="text-decoration-none" to={process.env.REACT_APP_ADMIN_URL+"/whatsapp?mobile="+row.original.phone}>
           {row.original.phone}
           </Link>
         </div>
