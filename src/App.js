@@ -1,6 +1,7 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "toastr/build/toastr.min.css";
+import * as React from 'react';
 import { Routes, Route, useLocation } from "react-router-dom";
 import LoginPage from "./Auth/LoginPage";
 import AdminPanel from "./Components/AdminPanel";

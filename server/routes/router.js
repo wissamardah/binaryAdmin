@@ -135,6 +135,61 @@ function sendTemplate(message,numbers){
 
 }
 
+function sendHBDTemplate(name,mobile){
+
+
+
+  const postData = {
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": mobile,
+    "type": "template",
+    "template": {
+      "name": "HBD",
+      "language": {
+        "code": "ar"
+      },
+      "components": [
+        {
+          "type": "body",
+          "parameters": [
+            {
+              "type": "text",
+              "text": name
+            }
+          ]
+        }
+      ]
+    }
+  };
+  
+  const options = {
+    url: 'https://graph.facebook.com/v17.0/'+process.env.facebookMobileId+'/messages',
+    method: 'POST',
+    json: true,
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer "+process.env.facebookToken
+    }
+  };
+  
+  request(options, (error, response, body) => {
+    if (error) {
+      console.error('Error:', error);
+
+    } else {
+      console.error('Response:', body);
+
+
+  
+    }
+  });
+
+
+
+}
+
 
 
 const poll = () => {
@@ -170,6 +225,38 @@ const poll = () => {
 
 poll();
 
+
+let scheduledBD={}
+const HBD = () => {
+  // Cancel all jobs
+  Object.values(scheduledBD).forEach(job => {
+    
+    try{
+      job.cancel()
+
+    }
+    catch{
+
+    }
+  });
+  scheduledBD = {};
+
+  // Fetch new jobs from database
+  db.query('SELECT * FROM customers', (err, results) => {
+    if (err) throw err;
+
+    results.forEach(row => {
+      const date = new Date(row.dob);
+      scheduledBD[row.id] = schedule.scheduleJob(date, function() {
+
+
+        sendHBDTemplate(row.name,row.mobile)
+        
+
+      });
+    });
+  });
+};
 
 
 
