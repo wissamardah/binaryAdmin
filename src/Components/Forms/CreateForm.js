@@ -217,7 +217,7 @@ const CreateForm = () => {
                 <Form.Label>الاختيارات</Form.Label>
                 <Form.Control
                   type="text"
-                  value={selectInput}
+                  value={inputs[index]["options"]}
                   onChange={(e) =>{
                     
                     setSelectInput(e.target.value)
