@@ -19,7 +19,7 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL+"/api/adminlogin",
+        process.env.REACT_APP_API_URL+"/api/whatsapp",
         {
           email,
           password,
