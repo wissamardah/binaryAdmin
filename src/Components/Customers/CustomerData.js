@@ -190,6 +190,42 @@ const CustomerData = () => {
           )
         ),
       },
+      {
+        id: "deletecustomer",
+        header:"حذف",
+        accessorKey: "deletecustomer",
+        Cell: ({ row }) => {
+         
+          const handleDelete = async () => {
+            const dataId = row.original.id; // Assuming there's an "id" property in the form data
+            const token = sessionStorage.getItem("token");
+            try{
+    await axios.get(process.env.REACT_APP_API_URL+`/api/deletecustomer/`+dataId, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            fetchData();
+
+
+            }
+            catch{
+
+            }
+        
+          };
+        
+          return (
+            <div className="text-end fw-bolder">
+
+
+
+             
+             <button type="button" class="btn btn-danger" onClick={handleDelete}>حذف</button>
+
+            </div>
+          );},
+      }
   ];
 
 

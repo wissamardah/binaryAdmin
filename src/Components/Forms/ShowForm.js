@@ -43,6 +43,8 @@ const ShowForm = () => {
         const result = response.data;
 
         if (result.status === "success") {
+
+          console.log(result.data[0].data)
           setFormDetails(result.data[0]);
           _setFormDetails(result.data[0].data);
         } else {

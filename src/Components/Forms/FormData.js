@@ -57,6 +57,8 @@ const FormData = ({ id, _formDetails }) => {
         if (result) {
           var x=[]
           result.forEach(r => {
+                    console.log(r);
+
             r.data.id=r.id
             r.data.formid=r.formid
             r.data.dateadded=r.dateadded
@@ -74,9 +76,72 @@ const FormData = ({ id, _formDetails }) => {
 
 
     var c=[]
+    const indexToInsert = _formDetails.length - 1;
+
+// Use the splice() method to insert the element at the desired index
+_formDetails.splice(indexToInsert, 0, {
+  id:"dateadded",
+  label:"تاريخ الاضافة",
+  type:"date"
+});
+
     _formDetails.forEach(header => {
 
-      if(header.id=="isSale"){
+      console.log(header["id"])
+      if(header.id!="isSale"){
+        c.push(   {
+          id: header["id"],
+          header:header.label,
+          accessorKey: header["id"],
+          Cell: ({ row }) => {
+        
+            if(header.id=="dateadded"){
+              const inputDate = new Date(row.original[header.id]);
+              const formattedDate = inputDate.toLocaleString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              });
+              return (
+           
+                <div className=" text-end  fw-bolder">
+                
+                  {
+                  
+                  formattedDate }
+              
+                </div>
+              )
+            }
+            else
+            return (
+           
+            <div className=" text-end  fw-bolder">
+            
+              {
+              
+              isURL(row.original[header.id])?
+            
+              <a
+              href={row.original[header.id]}
+  
+            >
+             <img src={back}/>
+            </a>:typeof(row.original[header.id])=="boolean"?row.original[header.id]?"نعم":"لا":row.original[header.id]
+              }
+          
+            </div>
+          )},
+        }) 
+      }
+
+    
+      else{
+
+
         c.push(   {
           id: header["id"],
           header:header.label,
@@ -160,33 +225,19 @@ const FormData = ({ id, _formDetails }) => {
               </div>
             );},
         }) 
-      }
-      else{
-          c.push(   {
-        id: header["id"],
-        header:header.label,
-        accessorKey: header["id"],
-        Cell: ({ row }) => {
-      
-          return (
-         
-          <div className=" text-end  fw-bolder">
-          
-            {
-            
-            isURL(row.original[header.id])?
-          
-            <a
-            href={row.original[header.id]}
 
-          >
-           <img src={back}/>
-          </a>:typeof(row.original[header.id])=="boolean"?row.original[header.id]?"نعم":"لا":row.original[header.id]
-            }
-        
-          </div>
-        )},
-      }) 
+
+
+
+
+
+
+
+
+
+
+
+      
       }
    
 

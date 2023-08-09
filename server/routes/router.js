@@ -1138,6 +1138,32 @@ router.get("/deleteFormData/:dataId",userMiddleware.isAdmin, async(req, res, nex
 
 
 })
+
+router.get("/deletecustomer/:id",userMiddleware.isAdmin, async(req, res, next) => {
+
+  db.query(
+    'delete from customers where id=?',[req.params.id],
+    (err, campains) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          status: "error",
+          msg: "Internal Server Error",
+        });
+      }
+  
+      else{
+        return res.status(200).send({
+          status: "success",
+          msg: "تم الحذف بنجاح",
+        });
+      }
+ 
+    })  
+
+
+
+})
 router.get("/stats",userMiddleware.isAdmin, async(req, res, next) => {
 
   db.query(
